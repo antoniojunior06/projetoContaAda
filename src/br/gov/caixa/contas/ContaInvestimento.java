@@ -15,7 +15,7 @@ public class ContaInvestimento extends Conta {
 
     public void gerarRendimento() {
         double rendimento = consultaSaldo() * taxaRendimentoAoMes;
-        deposito(rendimento);
+        depositar(rendimento);
     }
 
     public TipoConta getTipo() {

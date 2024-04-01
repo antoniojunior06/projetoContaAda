@@ -26,7 +26,7 @@ public abstract class Conta {
         this.classificacao = usuarioId.length() == 11 ? Classificacao.PF : Classificacao.PJ;
     }
 
-    public void saque(double valor) {
+    public void sacar(double valor) {
         verificarStatusConta();
         if (classificacao == Classificacao.PJ) {
             double valorComTaxa = valor + (valor * 0.005);
@@ -49,18 +49,18 @@ public abstract class Conta {
 
     }
 
-    public void deposito(double valor) {
+    public void depositar(double valor) {
         verificarStatusConta();
         this.saldo += valor;
         historico.add(new Acao(this.dataAtualizacao, TipoAcao.DEPOSITO, valor));
     }
 
-    public <T extends Conta> void transferencia(double valor, T contaDestino, Banco banco) {
+    public <T extends Conta> void transferir(double valor, T contaDestino, Banco banco) {
         verificarStatusConta();
         if (valor <= consultaSaldo()) {
            if(banco.temUsuario(contaDestino.getUsuarioId())) {
                this.saldo -= valor;
-               contaDestino.deposito(valor);
+               contaDestino.depositar(valor);
                if (contaDestino instanceof ContaInvestimento) {
                    historico.add(new Acao(this.dataAtualizacao, TipoAcao.INVESTIMENTO, valor, valor, this.usuarioId, contaDestino.getUsuarioId()));
                }else {
