@@ -19,8 +19,6 @@ public abstract class Conta {
     private Classificacao classificacao;
 
 
-    public Conta() {}
-
     public Conta(String usuarioId) {
         this.usuarioId = usuarioId;
         this.classificacao = usuarioId.length() == 11 ? Classificacao.PF : Classificacao.PJ;

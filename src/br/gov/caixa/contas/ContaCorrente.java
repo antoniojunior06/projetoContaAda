@@ -11,7 +11,7 @@ public class ContaCorrente extends Conta {
     }
 
 
-    public void investimento(double valor, ContaInvestimento conta, Banco banco) {
+    public void investir(double valor, ContaInvestimento conta, Banco banco) {
         verificarStatusConta();
         if ((conta.getUsuarioId().equals(getUsuarioId()))) {
             transferir(valor, conta, banco);
