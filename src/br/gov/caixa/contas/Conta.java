@@ -21,63 +21,32 @@ public abstract class Conta {
 
     public Conta(String usuarioId) {
         this.usuarioId = usuarioId;
-        this.classificacao = usuarioId.length() == 11 ? Classificacao.PF : Classificacao.PJ;
+        this.classificacao = verificaClassificacao(usuarioId);
     }
 
     public void sacar(double valor) {
-        verificarStatusConta();
-        if (classificacao == Classificacao.PJ) {
-            double valorComTaxa = valor + (valor * 0.005);
-            if(valorComTaxa > getSaldo()) {
-                historico.add(new Acao(this.dataAtualizacao, TipoAcao.SAQUE, valor, 0));
-                System.out.println("Saldo insuficiente");
-            } else {
-                this.saldo -= valorComTaxa;
-                historico.add(new Acao(this.dataAtualizacao, TipoAcao.SAQUE, valor, valor));
-            }
-            return;
-        }
-        if (valor <= consultaSaldo()) {
-            this.saldo -= valor;
-            historico.add(new Acao(this.dataAtualizacao, TipoAcao.SAQUE, valor, valor));
-        } else {
-            historico.add(new Acao(this.dataAtualizacao, TipoAcao.SAQUE, valor, 0));
-            System.out.println("Saldo insuficiente");
-        }
-
+        ContaService contaService = new ContaService();
+        contaService.sacar(this, valor);
     }
 
     public void depositar(double valor) {
-        verificarStatusConta();
-        this.saldo += valor;
-        historico.add(new Acao(this.dataAtualizacao, TipoAcao.DEPOSITO, valor));
+        ContaService contaService = new ContaService();
+        contaService.depositar(this, valor);
     }
 
     public <T extends Conta> void transferir(double valor, T contaDestino, Banco banco) {
-        verificarStatusConta();
-        if (valor <= consultaSaldo()) {
-           if(banco.temUsuario(contaDestino.getUsuarioId())) {
-               this.saldo -= valor;
-               contaDestino.depositar(valor);
-               if (contaDestino instanceof ContaInvestimento) {
-                   historico.add(new Acao(this.dataAtualizacao, TipoAcao.INVESTIMENTO, valor, valor, this.usuarioId, contaDestino.getUsuarioId()));
-               }else {
-                   historico.add(new Acao(this.dataAtualizacao, TipoAcao.TRANSFERENCIA, valor, valor, this.usuarioId, contaDestino.getUsuarioId()));
-               }
-               System.out.println("Transferência realizada com sucesso");
-           } else {
-               System.out.println("Conta inválida");
-           }
-        }else {
-            historico.add(new Acao(this.dataAtualizacao, TipoAcao.TRANSFERENCIA, valor, 0, this.usuarioId, contaDestino.getUsuarioId()));
-            System.out.println("Saldo insuficiente");
-        }
+        ContaService contaService = new ContaService();
+        contaService.transferir(this, valor, contaDestino, banco);
     }
 
     public void verificarStatusConta() {
         if (getStatus() == Status.INATIVO) {
             throw new IllegalArgumentException("A conta está inativa");
         }
+    }
+
+    private Classificacao verificaClassificacao(String usuarioId) {
+        return usuarioId.length() == 11 ? Classificacao.PF : Classificacao.PJ;
     }
 
     public double consultaSaldo() {
