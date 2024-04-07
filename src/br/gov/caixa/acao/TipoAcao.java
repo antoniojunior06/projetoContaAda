@@ -4,5 +4,6 @@ public enum TipoAcao {
     SAQUE,
     DEPOSITO,
     TRANSFERENCIA,
-    INVESTIMENTO
+    INVESTIMENTO,
+    SALDO
 }

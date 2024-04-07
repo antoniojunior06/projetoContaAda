@@ -32,7 +32,6 @@ public class AplicacaoConta {
         System.out.println("--------------------");
 
 
-
         ContaCorrente cc = banco.buscarContaPorId(1, ccs);
         ContaCorrente cc1 = banco.buscarContaPorId(2, ccs);
         ContaInvestimento ci1 = banco.buscarContaPorId(1, cis);
@@ -41,9 +40,11 @@ public class AplicacaoConta {
         cc1.depositar(200);
         cc.transferir(100, cc1, banco);
         cc.investir(200, ci1, banco);
-//        System.out.println(cc.getSaldo());
-//        System.out.println(cc1.getSaldo());
-//        System.out.println(ci1.getSaldo());
+        System.out.println("...");
+        System.out.println("Saldo: " + cc.consultaSaldo());
+        System.out.println("Saldo: " + cc1.consultaSaldo());
+        System.out.println("Saldo: " + ci1.consultaSaldo());
+        System.out.println("...");
 
 
         List<Acao> historico = cc.getHistorico();

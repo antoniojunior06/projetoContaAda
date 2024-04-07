@@ -17,7 +17,7 @@ public class Usuario {
             throw new IllegalArgumentException("O ID deve ter 11 ou 14 dígitos.");
         }
         this.id = id;
-        this.classificacao = id.length() == 11 ? Classificacao.PF : Classificacao.PJ;
+        this.classificacao = Classificacao.verificarClassificacao(id);
         this.nome = nome;
     }
 

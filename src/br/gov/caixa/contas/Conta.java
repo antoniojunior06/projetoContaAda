@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Conta {
+public class Conta implements ContaService{
     private long id;
     private double saldo;
     private List<Acao> historico = new ArrayList<>();
@@ -21,22 +21,55 @@ public abstract class Conta {
 
     public Conta(String usuarioId) {
         this.usuarioId = usuarioId;
-        this.classificacao = verificaClassificacao(usuarioId);
+        this.classificacao = Classificacao.verificarClassificacao(usuarioId);
     }
 
+    @Override
     public void sacar(double valor) {
-        ContaService contaService = new ContaService();
-        contaService.sacar(this, valor);
+        this.verificarStatusConta();
+        double valorComTaxa = valor + calcularTaxa(valor, this);
+        if(valorComTaxa > this.getSaldo()) {
+            this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.SAQUE, valor, Constantes.VALOR_ZERADO));
+            System.out.println("Saldo insuficiente");
+        } else {
+            this.setSaldo(this.getSaldo() - valorComTaxa);
+            this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.SAQUE, valor, valor));
+        }
     }
 
+    @Override
     public void depositar(double valor) {
-        ContaService contaService = new ContaService();
-        contaService.depositar(this, valor);
+        this.verificarStatusConta();
+        this.setSaldo(getSaldo() + valor);
+        this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.DEPOSITO, valor));
     }
 
-    public <T extends Conta> void transferir(double valor, T contaDestino, Banco banco) {
-        ContaService contaService = new ContaService();
-        contaService.transferir(this, valor, contaDestino, banco);
+    @Override
+    public void transferir(double valor, Conta contaDestino, Banco banco) {
+        this.verificarStatusConta();
+        if (valor <= this.getSaldo()) {
+            if(banco.temUsuario(contaDestino.getUsuarioId())) {
+                this.setSaldo(this.getSaldo() - valor);
+                contaDestino.depositar(valor);
+                if (contaDestino instanceof ContaInvestimento) {
+                    this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.INVESTIMENTO, valor, valor, this.getUsuarioId(), contaDestino.getUsuarioId()));
+                } else {
+                    this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.TRANSFERENCIA, valor, valor, this.getUsuarioId(), contaDestino.getUsuarioId()));
+                }
+                System.out.println("Transferência realizada com sucesso");
+            } else {
+                System.out.println("Conta inválida");
+            }
+        } else {
+            this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.TRANSFERENCIA, valor, 0, this.getUsuarioId(), contaDestino.getUsuarioId()));
+            System.out.println("Saldo insuficiente");
+        }
+    }
+
+    @Override
+    public double consultaSaldo() {
+        this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.DEPOSITO, this.saldo));
+        return this.saldo;
     }
 
     public void verificarStatusConta() {
@@ -45,12 +78,11 @@ public abstract class Conta {
         }
     }
 
-    private Classificacao verificaClassificacao(String usuarioId) {
-        return usuarioId.length() == 11 ? Classificacao.PF : Classificacao.PJ;
-    }
-
-    public double consultaSaldo() {
-        return this.saldo;
+    private double calcularTaxa(double valor, Conta conta) {
+        if (conta.getClassificacao() == Classificacao.PJ) {
+            return valor * Constantes.TAXA_SAQUE_PJ;
+        }
+        return valor * Constantes.TAXA_SAQUE_PF;
     }
 
     public long getId() {
@@ -108,5 +140,8 @@ public abstract class Conta {
     public void setClassificacao(Classificacao classificacao) {
         this.classificacao = classificacao;
     }
+
+
+
 
 }

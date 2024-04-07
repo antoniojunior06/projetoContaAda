@@ -1,5 +1,6 @@
 package br.gov.caixa.contas;
 
+import br.gov.caixa.Constantes;
 import br.gov.caixa.usuario.Classificacao;
 
 public class ContaInvestimento extends Conta {
@@ -10,7 +11,7 @@ public class ContaInvestimento extends Conta {
 
     public ContaInvestimento(String usuarioId) {
         super(usuarioId);
-        this.taxaRendimentoAoMes = getClassificacao() == Classificacao.PF ? 0.01 : 0.02;
+        this.taxaRendimentoAoMes = getClassificacao() == Classificacao.PF ? Constantes.TAXA_RENDIMENTO_PF : Constantes.TAXA_RENDIMENTO_PJ;
     }
 
     public void gerarRendimento() {
