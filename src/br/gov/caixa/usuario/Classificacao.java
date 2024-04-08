@@ -1,6 +1,6 @@
 package br.gov.caixa.usuario;
 
-import br.gov.caixa.Constantes;
+import br.gov.caixa.status.Constantes;
 
 public enum Classificacao {
     PF,

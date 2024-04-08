@@ -1,4 +1,4 @@
-package br.gov.caixa;
+package br.gov.caixa.status;
 
 public final class Constantes {
     public static final double TAXA_RENDIMENTO_PF = 0.01;

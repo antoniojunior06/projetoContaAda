@@ -1,4 +1,4 @@
-package br.gov.caixa;
+package br.gov.caixa.status;
 
 public enum Status {
     ATIVO,

@@ -1,7 +1,6 @@
 package br.gov.caixa.usuario;
 
-import br.gov.caixa.Status;
-import br.gov.caixa.usuario.Classificacao;
+import br.gov.caixa.status.Status;
 
 import java.time.LocalDate;
 

@@ -3,6 +3,8 @@ package br.gov.caixa.contas;
 import br.gov.caixa.*;
 import br.gov.caixa.acao.Acao;
 import br.gov.caixa.acao.TipoAcao;
+import br.gov.caixa.status.Constantes;
+import br.gov.caixa.status.Status;
 import br.gov.caixa.usuario.Classificacao;
 
 import java.time.LocalDate;

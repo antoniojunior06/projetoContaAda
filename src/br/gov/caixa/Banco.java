@@ -4,6 +4,7 @@ import br.gov.caixa.contas.Conta;
 import br.gov.caixa.contas.ContaCorrente;
 import br.gov.caixa.contas.ContaInvestimento;
 import br.gov.caixa.contas.ContaPoupanca;
+import br.gov.caixa.status.Status;
 import br.gov.caixa.usuario.Usuario;
 
 import java.util.ArrayList;

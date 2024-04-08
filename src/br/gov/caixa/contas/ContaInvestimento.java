@@ -1,6 +1,6 @@
 package br.gov.caixa.contas;
 
-import br.gov.caixa.Constantes;
+import br.gov.caixa.status.Constantes;
 import br.gov.caixa.usuario.Classificacao;
 
 public class ContaInvestimento extends Conta {
