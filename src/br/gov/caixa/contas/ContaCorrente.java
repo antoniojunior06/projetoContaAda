@@ -1,17 +1,17 @@
 package br.gov.caixa.contas;
 
 import br.gov.caixa.Banco;
+import br.gov.caixa.usuario.Usuario;
 
 public class ContaCorrente extends Conta implements Investimento{
 
-    private final TipoConta tipoConta = TipoConta.CORRENTE;
-
-    public ContaCorrente(String usuarioId) {
-        super(usuarioId);
+    public ContaCorrente(Usuario usuario) {
+        super(usuario.getId());
     }
 
+    @Override
     public TipoConta getTipo() {
-        return tipoConta;
+        return TipoConta.CORRENTE;
     }
 
     @Override

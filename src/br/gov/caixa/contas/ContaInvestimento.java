@@ -5,8 +5,6 @@ import br.gov.caixa.usuario.Classificacao;
 
 public class ContaInvestimento extends Conta {
 
-    private final TipoConta tipoConta = TipoConta.INVESTIMENTO;
-
     private double taxaRendimentoAoMes;
 
     public ContaInvestimento(String usuarioId) {
@@ -19,8 +17,9 @@ public class ContaInvestimento extends Conta {
         depositar(rendimento);
     }
 
+    @Override
     public TipoConta getTipo() {
-        return tipoConta;
+        return TipoConta.INVESTIMENTO;
     }
 
     public double getTaxaRendimentoAoMes() {

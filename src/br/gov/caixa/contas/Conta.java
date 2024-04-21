@@ -6,12 +6,14 @@ import br.gov.caixa.acao.TipoAcao;
 import br.gov.caixa.status.Constantes;
 import br.gov.caixa.status.Status;
 import br.gov.caixa.usuario.Classificacao;
+import br.gov.caixa.utils.CalculoTaxaConta;
+import br.gov.caixa.validador.ValidadorStatusConta;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Conta implements ContaService{
+public abstract class Conta implements ContaService{
     private long id;
     private double saldo;
     private List<Acao> historico = new ArrayList<>();
@@ -28,27 +30,26 @@ public class Conta implements ContaService{
 
     @Override
     public void sacar(double valor) {
-        this.verificarStatusConta();
-        double valorComTaxa = valor + calcularTaxa(valor, this);
+        ValidadorStatusConta.validarStatusConta(this);
+        double valorComTaxa = valor + CalculoTaxaConta.calcularTaxa(valor, this);
         if(valorComTaxa > this.getSaldo()) {
-            this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.SAQUE, valor, Constantes.VALOR_ZERADO));
-            System.out.println("Saldo insuficiente");
+            this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.SAQUE, valor, Constantes.VALOR_ZERADO, "Saldo insuficiente"));
         } else {
             this.setSaldo(this.getSaldo() - valorComTaxa);
-            this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.SAQUE, valor, valor));
+            this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.SAQUE, valor, valor, "Saque efetivado"));
         }
     }
 
     @Override
     public void depositar(double valor) {
-        this.verificarStatusConta();
+        ValidadorStatusConta.validarStatusConta(this);
         this.setSaldo(getSaldo() + valor);
         this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.DEPOSITO, valor));
     }
 
     @Override
     public void transferir(double valor, Conta contaDestino, Banco banco) {
-        this.verificarStatusConta();
+        ValidadorStatusConta.validarStatusConta(this);
         if (valor <= this.getSaldo()) {
             if(banco.temUsuario(contaDestino.getUsuarioId())) {
                 this.setSaldo(this.getSaldo() - valor);
@@ -70,22 +71,11 @@ public class Conta implements ContaService{
 
     @Override
     public double consultaSaldo() {
-        this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.DEPOSITO, this.saldo));
+        this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.SALDO, this.saldo));
         return this.saldo;
     }
 
-    public void verificarStatusConta() {
-        if (getStatus() == Status.INATIVO) {
-            throw new IllegalArgumentException("A conta está inativa");
-        }
-    }
-
-    private double calcularTaxa(double valor, Conta conta) {
-        if (conta.getClassificacao() == Classificacao.PJ) {
-            return valor * Constantes.TAXA_SAQUE_PJ;
-        }
-        return valor * Constantes.TAXA_SAQUE_PF;
-    }
+    public abstract TipoConta getTipo();
 
     public long getId() {
         return id;

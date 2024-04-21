@@ -12,16 +12,9 @@ public class Usuario {
     private Status status = Status.ATIVO;
 
     public Usuario(String id, String nome) {
-        if (!validarId(id)) {
-            throw new IllegalArgumentException("O ID deve ter 11 ou 14 dígitos.");
-        }
         this.id = id;
         this.classificacao = Classificacao.verificarClassificacao(id);
         this.nome = nome;
-    }
-
-    private boolean validarId(String id) {
-        return id.matches("\\d{11}|\\d{14}");
     }
 
     public String getId() {

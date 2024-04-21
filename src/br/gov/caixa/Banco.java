@@ -6,11 +6,12 @@ import br.gov.caixa.contas.ContaInvestimento;
 import br.gov.caixa.contas.ContaPoupanca;
 import br.gov.caixa.status.Status;
 import br.gov.caixa.usuario.Usuario;
+import br.gov.caixa.validador.Validador;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Banco {
+public class Banco implements Validador {
 
     private List<Usuario> usuarios;
     private List<Conta> contas;
@@ -27,6 +28,10 @@ public class Banco {
     }
 
     public void criarUsuario(String usuarioId, String nome) {
+        if (!validadorId(usuarioId)) {
+            throw new IllegalArgumentException("O ID deve ter 11 ou 14 dígitos");
+        }
+
         for (Usuario u : usuarios) {
             if (u.getId().equals(usuarioId)) {
                 return;
@@ -36,7 +41,7 @@ public class Banco {
         Usuario usuario = new Usuario(usuarioId, nome);
         usuarios.add(usuario);
 
-        ContaCorrente cc = new ContaCorrente(usuarioId);
+        ContaCorrente cc = new ContaCorrente(usuario);
         contasCorrente.add(cc);
         cc.setId(contaCorrenteId++);
 
@@ -155,5 +160,10 @@ public class Banco {
 
     public void setContaPoupancaId(long contaPoupancaId) {
         this.contaPoupancaId = contaPoupancaId;
+    }
+
+    @Override
+    public boolean validadorId(String id) {
+        return id.matches("\\d{11}|\\d{14}");
     }
 }

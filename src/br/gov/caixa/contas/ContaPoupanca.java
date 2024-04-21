@@ -1,14 +1,17 @@
 package br.gov.caixa.contas;
 
+import br.gov.caixa.usuario.Usuario;
+
 public class ContaPoupanca extends Conta {
 
-    private final TipoConta tipoConta = TipoConta.POUPANCA;
+    private Usuario usuario;
 
     public ContaPoupanca(String usuarioId) {
         super(usuarioId);
     }
 
+    @Override
     public TipoConta getTipo() {
-        return tipoConta;
+        return TipoConta.POUPANCA;
     }
 }

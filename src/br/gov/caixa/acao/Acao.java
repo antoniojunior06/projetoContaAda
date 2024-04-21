@@ -12,11 +12,12 @@ public class Acao {
     private String usuarioDestino;
     private String observacao;
 
-    public Acao(LocalDate data, TipoAcao tipo, double valorPretendido, double valorReal) {
+    public Acao(LocalDate data, TipoAcao tipo, double valorPretendido, double valorReal, String observacao) {
         this.data = data;
         this.tipo = tipo;
         this.valorPretendido = valorPretendido;
         this.valorReal = valorReal;
+        this.observacao = observacao;
     }
 
     public Acao(LocalDate data, TipoAcao tipo, double valorReal) {
