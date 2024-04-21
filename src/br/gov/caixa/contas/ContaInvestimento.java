@@ -22,11 +22,5 @@ public class ContaInvestimento extends Conta {
         return TipoConta.INVESTIMENTO;
     }
 
-    public double getTaxaRendimentoAoMes() {
-        return taxaRendimentoAoMes;
-    }
 
-    public void setTaxaRendimentoAoMes(double taxaRendimentoAoMes) {
-        this.taxaRendimentoAoMes = taxaRendimentoAoMes;
-    }
 }

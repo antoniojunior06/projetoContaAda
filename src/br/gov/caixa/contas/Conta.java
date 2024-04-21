@@ -1,6 +1,6 @@
 package br.gov.caixa.contas;
 
-import br.gov.caixa.*;
+import br.gov.caixa.Banco;
 import br.gov.caixa.acao.Acao;
 import br.gov.caixa.acao.TipoAcao;
 import br.gov.caixa.status.Constantes;
@@ -54,7 +54,7 @@ public abstract class Conta implements ContaService{
             if(banco.temUsuario(contaDestino.getUsuarioId())) {
                 this.setSaldo(this.getSaldo() - valor);
                 contaDestino.depositar(valor);
-                if (contaDestino instanceof ContaInvestimento) {
+                if (contaDestino.getTipo().equals(TipoConta.INVESTIMENTO)) {
                     this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.INVESTIMENTO, valor, valor, this.getUsuarioId(), contaDestino.getUsuarioId()));
                 } else {
                     this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.TRANSFERENCIA, valor, valor, this.getUsuarioId(), contaDestino.getUsuarioId()));
@@ -64,7 +64,7 @@ public abstract class Conta implements ContaService{
                 System.out.println("Conta inválida");
             }
         } else {
-            this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.TRANSFERENCIA, valor, 0, this.getUsuarioId(), contaDestino.getUsuarioId()));
+            this.getHistorico().add(new Acao(this.getDataAtualizacao(), TipoAcao.TRANSFERENCIA, valor, Constantes.VALOR_ZERADO, this.getUsuarioId(), contaDestino.getUsuarioId()));
             System.out.println("Saldo insuficiente");
         }
     }
@@ -97,16 +97,8 @@ public abstract class Conta implements ContaService{
         return historico;
     }
 
-    public void setHistorico(List<Acao> historico) {
-        this.historico = historico;
-    }
-
     public LocalDate getDataAtualizacao() {
         return dataAtualizacao;
-    }
-
-    public void setDataAtualizacao(LocalDate dataAtualizacao) {
-        this.dataAtualizacao = dataAtualizacao;
     }
 
     public Status getStatus() {
@@ -121,17 +113,10 @@ public abstract class Conta implements ContaService{
         return usuarioId;
     }
 
-    public void setUsuarioId(String usuarioId) {
-        this.usuarioId = usuarioId;
-    }
-
     public Classificacao getClassificacao() {
         return classificacao;
     }
 
-    public void setClassificacao(Classificacao classificacao) {
-        this.classificacao = classificacao;
-    }
 
 
 

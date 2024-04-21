@@ -2,6 +2,7 @@ package br.gov.caixa.contas;
 
 import br.gov.caixa.Banco;
 import br.gov.caixa.usuario.Usuario;
+import br.gov.caixa.validador.ValidadorStatusConta;
 
 public class ContaCorrente extends Conta implements Investimento{
 
@@ -16,9 +17,10 @@ public class ContaCorrente extends Conta implements Investimento{
 
     @Override
     public void investir(double valor, ContaInvestimento conta, Banco banco) {
-        verificarStatusConta();
-        if ((conta.getUsuarioId().equals(getUsuarioId()))) {
-            transferir(valor, conta, banco);
+        boolean temContaInvestimento = conta.getUsuarioId().equals(getUsuarioId());
+        if (!temContaInvestimento) {
+            banco.criarContaInvestimento(conta.getUsuarioId());
         }
+        transferir(valor, conta, banco);
     }
 }

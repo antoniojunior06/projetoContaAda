@@ -98,6 +98,11 @@ public class Banco implements Validador {
         }
     }
 
+    @Override
+    public boolean validadorId(String id) {
+        return id.matches("\\d{11}|\\d{14}");
+    }
+
     public List<Usuario> getUsuarios() {
         return usuarios;
     }
@@ -162,8 +167,5 @@ public class Banco implements Validador {
         this.contaPoupancaId = contaPoupancaId;
     }
 
-    @Override
-    public boolean validadorId(String id) {
-        return id.matches("\\d{11}|\\d{14}");
-    }
+
 }
