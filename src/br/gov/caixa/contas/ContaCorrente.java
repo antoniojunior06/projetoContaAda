@@ -2,7 +2,6 @@ package br.gov.caixa.contas;
 
 import br.gov.caixa.Banco;
 import br.gov.caixa.usuario.Usuario;
-import br.gov.caixa.validador.ValidadorStatusConta;
 
 public class ContaCorrente extends Conta implements Investimento{
 

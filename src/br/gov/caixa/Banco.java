@@ -48,46 +48,30 @@ public class Banco implements Validador {
     }
 
     public void criarContaPoupanca(String usuarioId) {
-        for (ContaPoupanca cp: contasPoupanca) {
-            if(cp.getUsuarioId().equals(usuarioId)) {
-                return;
+        if (!temUsuario(usuarioId)) {
+            for (ContaPoupanca cp: contasPoupanca) {
+                if(cp.getUsuarioId().equals(usuarioId)) {
+                    return;
+                }
             }
+
+            ContaPoupanca cp = new ContaPoupanca(usuarioId);
+            contasPoupanca.add(cp);
+            cp.setId(contaPoupancaId++);
         }
 
-        ContaPoupanca cp = new ContaPoupanca(usuarioId);
-        contasPoupanca.add(cp);
-        cp.setId(contaPoupancaId++);
 
     }
 
     public void criarContaInvestimento(String usuarioId) {
-        for (ContaInvestimento ci: contasInvestimento) {
-            if(ci.getUsuarioId().equals(usuarioId)) {
-                return;
-            }
-        }
-
         ContaInvestimento ci = new ContaInvestimento(usuarioId);
         contasInvestimento.add(ci);
         ci.setId(contaInvestimentoId++);
     }
 
-    public boolean temUsuario(String usuarioId) {
-        for (Usuario usuario : usuarios) {
-            if(usuario.getId().contains(usuarioId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public <T extends Conta> T buscarContaPorId(long id, List<T> contas) {
-        for (T conta: contas) {
-            if(conta.getId() == id) {
-                return conta;
-            }
-        }
-        return null;
+        return contas.stream().filter(conta -> conta.getId() == id).findFirst().orElse(null);
+
     }
 
     public <T extends Conta> void alterarStatusConta(T conta) {
@@ -103,12 +87,13 @@ public class Banco implements Validador {
         return id.matches("\\d{11}|\\d{14}");
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+    @Override
+    public boolean temUsuario(String id) {
+        return usuarios.stream().anyMatch(usuario -> usuario.getId().contains(id));
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public List<Usuario> getUsuarios() {
+        return usuarios;
     }
 
     public List<Conta> getContas() {
@@ -123,49 +108,12 @@ public class Banco implements Validador {
         return contasCorrente;
     }
 
-    public void setContasCorrente(List<ContaCorrente> contasCorrente) {
-        this.contasCorrente = contasCorrente;
-    }
-
     public List<ContaPoupanca> getContasPoupanca() {
         return contasPoupanca;
-    }
-
-    public void setContasPoupanca(List<ContaPoupanca> contasPoupanca) {
-        this.contasPoupanca = contasPoupanca;
     }
 
     public List<ContaInvestimento> getContasInvestimento() {
         return contasInvestimento;
     }
-
-    public void setContasInvestimento(List<ContaInvestimento> contasInvestimento) {
-        this.contasInvestimento = contasInvestimento;
-    }
-
-    public long getContaCorrenteId() {
-        return contaCorrenteId;
-    }
-
-    public void setContaCorrenteId(long contaCorrenteId) {
-        this.contaCorrenteId = contaCorrenteId;
-    }
-
-    public long getContaInvestimentoId() {
-        return contaInvestimentoId;
-    }
-
-    public void setContaInvestimentoId(long contaInvestimentoId) {
-        this.contaInvestimentoId = contaInvestimentoId;
-    }
-
-    public long getContaPoupancaId() {
-        return contaPoupancaId;
-    }
-
-    public void setContaPoupancaId(long contaPoupancaId) {
-        this.contaPoupancaId = contaPoupancaId;
-    }
-
 
 }

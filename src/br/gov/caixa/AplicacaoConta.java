@@ -15,6 +15,7 @@ public class AplicacaoConta {
         banco.criarContaPoupanca("12345678901");
         banco.criarContaInvestimento("12345678901");
         banco.criarContaInvestimento("12345678901234");
+        banco.criarContaPoupanca("12345678902");
 
         List<ContaCorrente> ccs = banco.getContasCorrente();
         for (ContaCorrente cc: ccs) {
