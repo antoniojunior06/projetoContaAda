@@ -1,4 +1,4 @@
-package br.gov.caixa.usuario;
+package br.gov.caixa.cliente;
 
 import br.gov.caixa.status.Constantes;
 
