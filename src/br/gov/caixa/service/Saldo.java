@@ -4,8 +4,8 @@ import br.gov.caixa.cliente.Cliente;
 
 import java.math.BigDecimal;
 
-public interface Saldo<T extends Cliente> {
+public interface Saldo {
 
-    BigDecimal consultarSaldo(T cliente, Integer numeroConta);
+    BigDecimal consultarSaldo(Cliente cliente, Integer numeroConta);
 
 }

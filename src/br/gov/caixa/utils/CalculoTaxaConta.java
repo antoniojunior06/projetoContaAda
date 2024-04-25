@@ -1,8 +1,10 @@
 package br.gov.caixa.utils;
 
+import java.math.BigDecimal;
+
 public class CalculoTaxaConta {
 
-//    public static double calcularTaxa(double valor, Conta conta) {
+//    public static double calcularTaxa(BigDecimal valor, Conta conta) {
 //        if (conta.getClassificacao() == Classificacao.PJ) {
 //            return valor * Constantes.TAXA_SAQUE_PJ;
 //        }
