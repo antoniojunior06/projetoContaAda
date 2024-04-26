@@ -8,17 +8,4 @@ public class ContaCorrente extends Conta {
         super(cliente);
     }
 
-//    @Override
-//    public TipoConta getTipo() {
-//        return TipoConta.CORRENTE;
-//    }
-//
-//    @Override
-//    public void investir(double valor, ContaInvestimento conta, Banco banco) {
-//        boolean temContaInvestimento = conta.getUsuarioId().equals(getUsuarioId());
-//        if (!temContaInvestimento) {
-//            banco.criarContaInvestimento(conta.getUsuarioId());
-//        }
-//        transferir(valor, conta, banco);
-//    }
 }

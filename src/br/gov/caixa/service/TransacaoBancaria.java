@@ -25,7 +25,7 @@ public class TransacaoBancaria implements Deposito, Saque, Transferencia, Saldo,
     public void depositar(Cliente cliente, Integer numeroConta, BigDecimal valor) {
         Conta conta = getContaCliente(cliente, numeroConta);
         conta.setSaldo(conta.getSaldo().add(valor));
-        this.getHistorico().add(new Acao(TipoAcao.DEPOSITO, valor, "Depósito efetivado"));
+        historicoAcaoGenerico(TipoAcao.DEPOSITO, valor, "Depósito efetivado");
     }
 
     @Override
@@ -33,7 +33,7 @@ public class TransacaoBancaria implements Deposito, Saque, Transferencia, Saldo,
         Conta contaCorrente = getContaCliente(cliente, numeroConta);
         Conta contaInvestimento = getContaInvestimento(cliente);
         transferir(cliente, contaCorrente.getNumero(), contaInvestimento, valor);
-        this.getHistorico().add(new Acao(TipoAcao.INVESTIMENTO, valor, "Investimento efetivado"));
+        historicoAcaoGenerico(TipoAcao.INVESTIMENTO, valor, "Investimento efetivado");
     }
 
     @Override
@@ -47,18 +47,18 @@ public class TransacaoBancaria implements Deposito, Saque, Transferencia, Saldo,
         Conta conta = getContaCliente(cliente, numeroConta);
         BigDecimal valorComTaxa = calcularTaxa(valor, cliente);
         if (valorComTaxa.compareTo(conta.getSaldo()) > 0) {
-            this.getHistorico().add(new Acao(TipoAcao.SAQUE, valor, "Saldo insuficiente"));
+            historicoAcaoGenerico(TipoAcao.SAQUE, valor, "Saldo insuficiente");
             throw new RuntimeException("Saldo insuficiente");
         }
         conta.setSaldo(conta.getSaldo().subtract(valorComTaxa));
-        this.getHistorico().add(new Acao(TipoAcao.SAQUE, valor, "Saque efetivado"));
+        historicoAcaoGenerico(TipoAcao.SAQUE, valor, "Saque efetivado");
     }
 
     @Override
     public void transferir(Cliente cliente, Integer numeroContaOrigem, Conta destino, BigDecimal valor) {
         sacar(cliente, numeroContaOrigem, valor);
         depositar(destino.getCliente(), destino.getNumero(), valor);
-        this.getHistorico().add(new Acao(TipoAcao.TRANSFERENCIA, valor, "Transferência efetivada"));
+        historicoAcaoGenerico(TipoAcao.TRANSFERENCIA, valor, "Transferência efetivada");
 
     }
 
@@ -80,11 +80,15 @@ public class TransacaoBancaria implements Deposito, Saque, Transferencia, Saldo,
         return contaInvestimento;
     }
 
-    public static BigDecimal calcularTaxa(BigDecimal valor, Cliente cliente) {
+    private static BigDecimal calcularTaxa(BigDecimal valor, Cliente cliente) {
         if (cliente.getClassificacao() == Classificacao.PJ) {
             return valor.multiply(TAXA_SAQUE_PJ);
         }
         return valor.multiply(TAXA_SAQUE_PF);
+    }
+
+    private void historicoAcaoGenerico(TipoAcao deposito, BigDecimal valor, String observacao) {
+        this.getHistorico().add(new Acao(deposito, valor, observacao));
     }
 
     public List<Acao> getHistorico() {
