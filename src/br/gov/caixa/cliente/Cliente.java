@@ -12,7 +12,7 @@ public class Cliente {
     private String id;
     private Classificacao classificacao;
     private String nome;
-    private LocalDate dataCadastro = LocalDate.now();
+    private LocalDate dataCadastro;
     private Status status;
     private List<Conta> contas;
 

@@ -1,93 +1,49 @@
 package br.gov.caixa.acao;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Acao {
 
     private LocalDate data;
     private TipoAcao tipo;
-    private double valorPretendido;
-    private double valorReal;
+    private BigDecimal valor;
     private String usuarioOrigem;
     private String usuarioDestino;
     private String observacao;
 
-    public Acao(LocalDate data, TipoAcao tipo, double valorPretendido, double valorReal, String observacao) {
-        this.data = data;
+    public Acao(TipoAcao tipo, BigDecimal valor, String observacao) {
+        this.data = LocalDate.now();
         this.tipo = tipo;
-        this.valorPretendido = valorPretendido;
-        this.valorReal = valorReal;
+        this.valor = valor;
         this.observacao = observacao;
     }
 
-    public Acao(LocalDate data, TipoAcao tipo, double valorReal) {
-        this.data = data;
+    public Acao(TipoAcao tipo, BigDecimal valor, String usuarioOrigem, String usuarioDestino) {
+        this.data = LocalDate.now();
         this.tipo = tipo;
-        this.valorReal = valorReal;
-    }
-
-    public Acao(LocalDate data, TipoAcao tipo, double valorPretendido, double valorReal, String usuarioOrigem, String usuarioDestino) {
-        this.data = data;
-        this.tipo = tipo;
-        this.valorPretendido = valorPretendido;
-        this.valorReal = valorReal;
+        this.valor = valor;
         this.usuarioOrigem = usuarioOrigem;
         this.usuarioDestino = usuarioDestino;
+        this.observacao = observacao;
     }
 
     public LocalDate getData() {
         return data;
     }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
     public TipoAcao getTipo() {
         return tipo;
     }
-
-    public void setTipo(TipoAcao tipo) {
-        this.tipo = tipo;
-    }
-
-    public double getValorPretendido() {
-        return valorPretendido;
-    }
-
-    public void setValorPretendido(double valorPretendido) {
-        this.valorPretendido = valorPretendido;
-    }
-
-    public double getValorReal() {
-        return valorReal;
-    }
-
-    public void setValorReal(double valorReal) {
-        this.valorReal = valorReal;
-    }
-
     public String getUsuarioOrigem() {
         return usuarioOrigem;
     }
-
-    public void setUsuarioOrigem(String usuarioOrigem) {
-        this.usuarioOrigem = usuarioOrigem;
-    }
-
     public String getUsuarioDestino() {
         return usuarioDestino;
     }
-
-    public void setUsuarioDestino(String usuarioDestino) {
-        this.usuarioDestino = usuarioDestino;
-    }
-
     public String getObservacao() {
         return observacao;
     }
-
-    public void setObservacao(String observacao) {
-        this.observacao = observacao;
+    public BigDecimal getValor() {
+        return valor;
     }
 }

@@ -13,7 +13,6 @@ import java.util.Random;
 public abstract class Conta {
     private Integer numero;
     private BigDecimal saldo;
-    private List<Acao> historico = new ArrayList<>();
     private LocalDate dataCriacao;
     private Cliente cliente;
     private Status status;
