@@ -1,58 +1,27 @@
 package br.gov.caixa;
 
-import br.gov.caixa.cliente.Cliente;
-import br.gov.caixa.service.TransacaoBancaria;
+import br.gov.caixa.arquivo.CriacaoArquivo;
+import br.gov.caixa.arquivo.LeituraArquivo;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class Main {
 
     private static final String PATH_BASE = "C:/Users/anton/IdeaProjects/ada/projetoContaBanco/";
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
-        TransacaoBancaria tb = new TransacaoBancaria();
+        /* Rodrigo, no meu projeto a definição se é PF ou PJ é feita de acordo com a quantidade de dígitos.
+           11 para CPF e 14 para CNPJ porque na vida real o que vai definir se um conta é uma ou outra é
+           a numeração, para mim faz mais sentido assim. Desta forma, não há necessidade de instanciar ClientePF
+           e ClientePJ. Se puder fazer a correção se isso é uma boa prática e o que pode incorrer em prejuízo
+           para o projeto, agradeço. E aí fiz uma modificação no arquivo pessoas para que a numeração das linhas
+           que sejam PJ tivesse 14 digítos, foi até fácil fiz a substituição simultânea no excel incluído 000 no
+           final da numeração.
+         */
 
-        Path path = Path.of("pessoas.csv");
-
-        List<Cliente> clientes = Files.lines(path)
-                .skip(1)
-                .map(linha -> linha.split(","))
-                .filter(coluna -> ("2".equals(coluna[3]) &&
-                        LocalDate.parse(coluna[1], DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                                .until(LocalDate.now(), ChronoUnit.YEARS) >= 18) ||
-                        "1".equals(coluna[3]))
-                .map(coluna -> {
-                    Cliente cliente = new Cliente(coluna[2], coluna[0]);
-                    deposito(tb, cliente);
-                    return cliente;
-                })
-                .toList();
-
-        List<String> linhasClientes = clientes.stream()
-                .map(cliente -> STR."\{cliente.getNome()};\{cliente.getId()};\{cliente.getClassificacao()};\{getNumero(cliente)};\{getSaldo(cliente)}")
-                .toList();
-
-        Path destino = Path.of(STR."\{PATH_BASE}contas.csv");
-        Files.write(destino, linhasClientes);
-
+        List<String> clientes = LeituraArquivo.lerClientesDoArquivo("pessoas.csv");
+        CriacaoArquivo.criarAquivo(STR."\{PATH_BASE}contas.csv", clientes);
     }
 
-    private static BigDecimal getSaldo(Cliente cliente) {
-        return cliente.getContas().getFirst().getSaldo();
-    }
 
-    private static Integer getNumero(Cliente cliente) {
-        return cliente.getContas().getFirst().getNumero();
-    }
-
-    private static void deposito(TransacaoBancaria tb, Cliente cliente) {
-        tb.depositar(cliente, getNumero(cliente), new BigDecimal("50.00"));
-    }
 }

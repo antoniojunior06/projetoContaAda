@@ -15,6 +15,7 @@ public class Cliente {
     private LocalDate dataCadastro;
     private Status status;
     private List<Conta> contas;
+    private Integer numeroConta;
 
     public Cliente(String id, String nome) {
         this.id = id;
@@ -49,5 +50,9 @@ public class Cliente {
 
     public List<Conta> getContas() {
         return contas;
+    }
+
+    public Integer getNumeroConta() {
+        return this.getContas().getFirst().getNumero();
     }
 }
